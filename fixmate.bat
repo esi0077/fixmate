@@ -3,12 +3,21 @@ title FixMate - IT Maintenance Toolkit
 color 1F
 
 :: ====== CONFIG ======
-set "VERSION=1.0.3"
+set "VERSION=1.0.4"
 set "REPO=https://raw.githubusercontent.com/esi0077/fixmate/main"
 set "REPO_VERSION=%REPO%/version.txt"
 set "REPO_BAT=%REPO%/fixmate.bat"
 set "REMOTE_VERSION_FILE=%TEMP%\fixmate_version.txt"
 set "REMOTE_SCRIPT=%TEMP%\fixmate_new.bat"
+set "LOCAL_VERSION_FILE=%~dp0version.txt"
+
+if exist "%LOCAL_VERSION_FILE%" (
+    set /p VERSION=<"%LOCAL_VERSION_FILE%"
+) else (
+    set "VERSION=1.0.0"
+)
+
+
 
 :: ====== AUTO-UPDATE ======
 echo Checking for updates...
