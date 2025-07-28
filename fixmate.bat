@@ -2,43 +2,53 @@
 title FixMate - IT Maintenance Toolkit
 color 1F
 
-:: ====== AUTO-UPDATE SECTION ======
+:: ====== CONFIG ======
 set "VERSION=1.0.2"
 set "REPO=https://raw.githubusercontent.com/esi0077/fixmate/main"
+set "REPO_VERSION=%REPO%/version.txt"
+set "REPO_BAT=%REPO%/FixMate.bat"
 set "REMOTE_VERSION_FILE=%TEMP%\fixmate_version.txt"
 set "REMOTE_SCRIPT=%TEMP%\FixMate_new.bat"
 
+:: ====== AUTO-UPDATE ======
 echo Checking for updates...
-powershell -Command "try { Invoke-WebRequest -Uri '%REPO%/version.txt' -OutFile '%REMOTE_VERSION_FILE%' -UseBasicParsing } catch { exit 1 }"
+
+:: Download latest version number
+powershell -Command "try { Invoke-WebRequest -Uri '%REPO_VERSION%' -OutFile '%REMOTE_VERSION_FILE%' -UseBasicParsing } catch { exit 1 }"
+
+:: Check if file exists after download
 if not exist "%REMOTE_VERSION_FILE%" (
     echo [WARNING] Could not check for updates. Continuing with local version.
-    goto MENU
+    goto :MENU
 )
 
-set /p LATEST_VERSION=<%REMOTE_VERSION_FILE%
+:: Read and delete version file
+set /p LATEST_VERSION=<"%REMOTE_VERSION_FILE%"
 del "%REMOTE_VERSION_FILE%"
 
+:: Compare versions
 if not "%VERSION%"=="%LATEST_VERSION%" (
     echo [UPDATE] New version available: %LATEST_VERSION%
     echo Downloading update...
 
-    powershell -Command "try { Invoke-WebRequest -Uri '%REPO%/FixMate.bat' -OutFile '%REMOTE_SCRIPT%' -UseBasicParsing } catch { exit 1 }"
+    powershell -Command "try { Invoke-WebRequest -Uri '%REPO_BAT%' -OutFile '%REMOTE_SCRIPT%' -UseBasicParsing } catch { exit 1 }"
 
     if not exist "%REMOTE_SCRIPT%" (
         echo [ERROR] Failed to download updated script.
         pause
-        goto MENU
+        goto :MENU
     )
 
     echo Updating FixMate...
     copy /y "%REMOTE_SCRIPT%" "%~f0" >nul
     del "%REMOTE_SCRIPT%"
 
-    echo Restarting FixMate with new version...
+    echo Restarting FixMate...
     start "" "%~f0"
     exit
 )
 :: ====== END AUTO-UPDATE ======
+
 
 
 :MENU
