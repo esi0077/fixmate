@@ -16,6 +16,7 @@ if exist "%LOCAL_VERSION_FILE%" (
     set "VERSION=1.0.0"
 )
 
+
 :: ====== AUTO-UPDATE ======
 echo Checking for updates...
 
