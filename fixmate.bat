@@ -3,7 +3,7 @@ title FixMate - IT Maintenance Toolkit
 color 1F
 
 :: ====== AUTO-UPDATE SECTION ======
-set "VERSION=1.0.1"
+set "VERSION=1.0.2"
 set "REPO= https://raw.githubusercontent.com/esi0077/fixmate/refs/heads/main/version.txt"
 set "REMOTE_VERSION_FILE=%TEMP%\fixmate_version.txt"
 set "REMOTE_SCRIPT=%TEMP%\FixMate_new.bat"
