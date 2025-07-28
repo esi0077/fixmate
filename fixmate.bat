@@ -2,16 +2,18 @@
 title FixMate - IT Maintenance Toolkit
 color 1F
 
-set "VERSION=1.0.3"
-set "REPO=https://raw.githubusercontent.com/esi0077/fixmate/main"
+:: ====== AUTO-UPDATE SECTION ======
+set "VERSION=1.0.1"
+set "REPO= https://raw.githubusercontent.com/esi0077/fixmate/refs/heads/main/version.txt"
 set "REMOTE_VERSION_FILE=%TEMP%\fixmate_version.txt"
 set "REMOTE_SCRIPT=%TEMP%\FixMate_new.bat"
 
+:: Download latest version number
 powershell -Command "Invoke-WebRequest -Uri '%REPO%/version.txt' -OutFile '%REMOTE_VERSION_FILE%'"
 set /p LATEST_VERSION=<%REMOTE_VERSION_FILE%
 del %REMOTE_VERSION_FILE%
 
-
+:: Compare versions
 if not "%VERSION%"=="%LATEST_VERSION%" (
     echo [UPDATE] New version available: %LATEST_VERSION%
     echo Downloading update...
@@ -26,6 +28,7 @@ if not "%VERSION%"=="%LATEST_VERSION%" (
     start "" "%~f0"
     exit
 )
+:: ====== END AUTO-UPDATE ======
 
 
 :MENU
