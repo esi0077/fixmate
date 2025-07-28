@@ -3,7 +3,7 @@ title FixMate - IT Maintenance Toolkit
 color 1F
 
 :: ====== CONFIG ======
-set "VERSION=1.0.2"
+set "VERSION=1.0.3"
 set "REPO=https://raw.githubusercontent.com/esi0077/fixmate/main"
 set "REPO_VERSION=%REPO%/version.txt"
 set "REPO_BAT=%REPO%/fixmate.bat"
@@ -48,7 +48,6 @@ if not "%VERSION%"=="%LATEST_VERSION%" (
 
 
 
-
 :MENU
 cls
 echo ==================================================
@@ -60,6 +59,11 @@ echo 3. Clear System Cache
 echo 4. Clear Microsoft Office Logins
 echo 5. Clear Microsoft App Local Cache
 echo 6. Restart Network Adapter and Bluetooth
+echo 7. Check System Info (RAM, CPU, OS)
+echo 8. Ping Google DNS
+echo 9. Battery Health Report
+echo 10. Show Network Adapters Info
+echo 11. Scan System Files (SFC)
 echo 0. Exit
 echo ==================================================
 set /p choice=Choose an option:
@@ -70,6 +74,11 @@ if "%choice%"=="3" goto clearcache
 if "%choice%"=="4" goto clearoffice
 if "%choice%"=="5" goto clearmscache
 if "%choice%"=="6" goto restartnet
+if "%choice%"=="7" goto sysinfo
+if "%choice%"=="8" goto pingtest
+if "%choice%"=="9" goto battery
+if "%choice%"=="10" goto netinfo
+if "%choice%"=="11" goto sfc
 if "%choice%"=="0" exit
 goto MENU
 
@@ -123,15 +132,49 @@ goto MENU
 :restartnet
 cls
 echo Restarting network adapter and Bluetooth...
-
-:: Replace "Wi-Fi" with your adapter name if different
 netsh interface set interface "Wi-Fi" admin=disable
 timeout /t 2 >nul
 netsh interface set interface "Wi-Fi" admin=enable
-
 net stop bthserv >nul 2>&1
 net start bthserv >nul 2>&1
-
 echo Adapters restarted.
+pause
+goto MENU
+
+:sysinfo
+cls
+echo System Information:
+systeminfo | findstr /i "OS Name: OS Version: System Manufacturer: System Model: Total Physical Memory"
+wmic cpu get name
+wmic memorychip get capacity
+pause
+goto MENU
+
+:pingtest
+cls
+echo Pinging 8.8.8.8 (Google DNS)...
+ping 8.8.8.8
+pause
+goto MENU
+
+:battery
+cls
+echo Generating battery report...
+powercfg /batteryreport /output "%USERPROFILE%\Desktop\battery-report.html"
+echo Report saved to Desktop as battery-report.html
+pause
+goto MENU
+
+:netinfo
+cls
+echo Network Adapters Info:
+ipconfig /all
+pause
+goto MENU
+
+:sfc
+cls
+echo Running System File Checker (SFC)...
+sfc /scannow
 pause
 goto MENU
