@@ -6,9 +6,9 @@ color 1F
 set "VERSION=1.0.2"
 set "REPO=https://raw.githubusercontent.com/esi0077/fixmate/main"
 set "REPO_VERSION=%REPO%/version.txt"
-set "REPO_BAT=%REPO%/FixMate.bat"
+set "REPO_BAT=%REPO%/fixmate.bat"
 set "REMOTE_VERSION_FILE=%TEMP%\fixmate_version.txt"
-set "REMOTE_SCRIPT=%TEMP%\FixMate_new.bat"
+set "REMOTE_SCRIPT=%TEMP%\fixmate_new.bat"
 
 :: ====== AUTO-UPDATE ======
 echo Checking for updates...
@@ -16,17 +16,14 @@ echo Checking for updates...
 :: Download latest version number
 powershell -Command "try { Invoke-WebRequest -Uri '%REPO_VERSION%' -OutFile '%REMOTE_VERSION_FILE%' -UseBasicParsing } catch { exit 1 }"
 
-:: Check if file exists after download
 if not exist "%REMOTE_VERSION_FILE%" (
     echo [WARNING] Could not check for updates. Continuing with local version.
     goto :MENU
 )
 
-:: Read and delete version file
 set /p LATEST_VERSION=<"%REMOTE_VERSION_FILE%"
 del "%REMOTE_VERSION_FILE%"
 
-:: Compare versions
 if not "%VERSION%"=="%LATEST_VERSION%" (
     echo [UPDATE] New version available: %LATEST_VERSION%
     echo Downloading update...
@@ -48,6 +45,7 @@ if not "%VERSION%"=="%LATEST_VERSION%" (
     exit
 )
 :: ====== END AUTO-UPDATE ======
+
 
 
 
