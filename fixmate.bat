@@ -1,9 +1,18 @@
+
+@REM ░█████╗░██████╗░███╗░░░███╗██╗███╗░░██╗  ███████╗░██████╗███╗░░░███╗░█████╗░██╗██╗░░░░░██╗
+@REM ██╔══██╗██╔══██╗████╗░████║██║████╗░██║  ██╔════╝██╔════╝████╗░████║██╔══██╗██║██║░░░░░██║
+@REM ███████║██████╔╝██╔████╔██║██║██╔██╗██║  █████╗░░╚█████╗░██╔████╔██║███████║██║██║░░░░░██║
+@REM ██╔══██║██╔══██╗██║╚██╔╝██║██║██║╚████║  ██╔══╝░░░╚═══██╗██║╚██╔╝██║██╔══██║██║██║░░░░░██║
+@REM ██║░░██║██║░░██║██║░╚═╝░██║██║██║░╚███║  ███████╗██████╔╝██║░╚═╝░██║██║░░██║██║███████╗██║
+@REM ╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░░░░╚═╝╚═╝╚═╝░░╚══╝  ╚══════╝╚═════╝░╚═╝░░░░░╚═╝╚═╝░░╚═╝╚═╝╚══════╝╚═╝
+@REM  GitHub : https://github.com/esi0077
+
 @echo off
 title FixMate - IT Maintenance Toolkit
-color 1F
+
 
 :: ====== CONFIG ======
-set "VERSION=1.0.4"
+set "VERSION=1.0.5"
 set "REPO=https://raw.githubusercontent.com/esi0077/fixmate/main"
 set "REPO_VERSION=%REPO%/version.txt"
 set "REPO_BAT=%REPO%/fixmate.bat"
@@ -59,9 +68,13 @@ if not "%VERSION%"=="%LATEST_VERSION%" (
 
 :MENU
 cls
+
 echo ==================================================
 echo                 FixMate - IT Tools
+echo                 Version: %VERSION%
 echo ==================================================
+
+echo.
 echo 1. Check Serial Number
 echo 2. Check HWID
 echo 3. Clear System Cache
@@ -73,7 +86,15 @@ echo 8. Ping Google DNS
 echo 9. Battery Health Report
 echo 10. Show Network Adapters Info
 echo 11. Scan System Files (SFC)
+echo.
+
+echo ==================================================
+
+echo.
+echo 99. Dark Mode / light mode 
 echo 0. Exit
+echo.
+
 echo ==================================================
 set /p choice=Choose an option:
 
@@ -88,8 +109,42 @@ if "%choice%"=="8" goto pingtest
 if "%choice%"=="9" goto battery
 if "%choice%"=="10" goto netinfo
 if "%choice%"=="11" goto sfc
+
+if "%choice%"=="99" goto darkmode
 if "%choice%"=="0" exit
+
+
 goto MENU
+
+
+
+:darkmode
+
+echo Dark Mode activated! (Just kidding, no dark mode here)
+color 0F
+echo This is the dark mode XD
+cls
+echo kidding Toggling dark mode...
+echo This will change the Windows theme to dark or light mode based on current settings.
+
+set "REGKEY=HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
+for /f "tokens=3" %%a in ('reg query "%REGKEY%" /v AppsUseLightTheme 2^>nul') do set CURRENT=%%a
+
+if "%CURRENT%"=="0x1" (
+    echo Switching to Dark Mode...
+    reg add "%REGKEY%" /v AppsUseLightTheme /t REG_DWORD /d 0 /f >nul
+    reg add "%REGKEY%" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f >nul
+) else (
+    echo Switching to Light Mode...
+    reg add "%REGKEY%" /v AppsUseLightTheme /t REG_DWORD /d 1 /f >nul
+    reg add "%REGKEY%" /v SystemUsesLightTheme /t REG_DWORD /d 1 /f >nul
+)
+
+echo Done. You may need to sign out and back in to see changes fully.
+pause
+goto MENU
+
+
 
 :serial
 cls
